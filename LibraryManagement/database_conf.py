@@ -1,6 +1,10 @@
 import os
+import logging
 from pathlib import Path
 from dotenv import load_dotenv
+
+# Get the logger for this module
+logger = logging.getLogger('myapp')
 
 # Load environment variables from .env file
 load_dotenv()
@@ -8,12 +12,11 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 USE_POSTGRES = os.getenv('USE_POSTGRES', False)
-print("Postgres", USE_POSTGRES)
 
 
 if USE_POSTGRES:
     try:
-        print("Connecting to postgres")
+        logger.info("Connecting to postgres")
         DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -25,7 +28,7 @@ if USE_POSTGRES:
         }
     }
     except Exception as e:
-        print(f"Error connecting to PostgreSQL database {str(e)}")
+        logger.error(f"Error connecting to PostgreSQL database {str(e)}")
         DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -33,7 +36,7 @@ if USE_POSTGRES:
         }
     }
 else:
-    print("Using SQLite database")
+    logger.info("Using SQLite database")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
